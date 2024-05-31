@@ -10,7 +10,11 @@
  * ## SOURCE: https://github.com/acacode/swagger-typescript-api ##
  * ---------------------------------------------------------------
  */
-import { CreateSchemaDto, SchemasControllerCreateData } from './data-contracts';
+import {
+  CreateSchemaDto,
+  SchemasControllerCreateData,
+  SchemasControllerFindOneData,
+} from './data-contracts';
 import { ContentType, HttpClient, RequestParams } from './http-client';
 
 export class Schemas<
@@ -33,6 +37,20 @@ export class Schemas<
       method: 'POST',
       body: data,
       type: ContentType.Json,
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags 2.1. Schemas
+   * @name SchemasControllerFindOne
+   * @summary 스키마 조회
+   * @request GET:/schemas/{slug}
+   */
+  schemasControllerFindOne = (slug: string, params: RequestParams = {}) =>
+    this.request<SchemasControllerFindOneData, void>({
+      path: `/schemas/${slug}`,
+      method: 'GET',
       ...params,
     });
 }

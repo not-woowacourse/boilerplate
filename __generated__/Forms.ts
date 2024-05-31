@@ -11,7 +11,9 @@
  * ---------------------------------------------------------------
  */
 import {
+  BatchDeleteFormDto,
   CreateFormDto,
+  FormsControllerBatchRemoveData,
   FormsControllerCreateData,
   FormsControllerFindAllData,
   FormsControllerFindOneByIdData,
@@ -28,15 +30,15 @@ export class Forms<
    * @tags 2.2. Forms
    * @name FormsControllerCreate
    * @summary 폼 제출
-   * @request POST:/forms/{schemaId}
+   * @request POST:/forms/{slug}
    */
   formsControllerCreate = (
-    schemaId: string,
+    slug: string,
     data: CreateFormDto,
     params: RequestParams = {},
   ) =>
     this.request<FormsControllerCreateData, void>({
-      path: `/forms/${schemaId}`,
+      path: `/forms/${slug}`,
       method: 'POST',
       body: data,
       type: ContentType.Json,
@@ -48,11 +50,11 @@ export class Forms<
    * @tags 2.2. Forms
    * @name FormsControllerFindAll
    * @summary 모든 폼 조회
-   * @request GET:/forms/{schemaId}
+   * @request GET:/forms/{slug}
    */
-  formsControllerFindAll = (schemaId: string, params: RequestParams = {}) =>
+  formsControllerFindAll = (slug: string, params: RequestParams = {}) =>
     this.request<FormsControllerFindAllData, void>({
-      path: `/forms/${schemaId}`,
+      path: `/forms/${slug}`,
       method: 'GET',
       ...params,
     });
@@ -62,15 +64,15 @@ export class Forms<
    * @tags 2.2. Forms
    * @name FormsControllerFindOneById
    * @summary 폼 조회
-   * @request GET:/forms/{schemaId}/{id}
+   * @request GET:/forms/{slug}/{id}
    */
   formsControllerFindOneById = (
-    schemaId: string,
-    id: string,
+    slug: string,
+    id: number,
     params: RequestParams = {},
   ) =>
     this.request<FormsControllerFindOneByIdData, void>({
-      path: `/forms/${schemaId}/${id}`,
+      path: `/forms/${slug}/${id}`,
       method: 'GET',
       ...params,
     });
@@ -80,12 +82,36 @@ export class Forms<
    * @tags 2.2. Forms
    * @name FormsControllerRemove
    * @summary 폼 삭제
-   * @request DELETE:/forms/{id}
+   * @request DELETE:/forms/{slug}/{id}
    */
-  formsControllerRemove = (id: string, params: RequestParams = {}) =>
+  formsControllerRemove = (
+    slug: string,
+    id: number,
+    params: RequestParams = {},
+  ) =>
     this.request<FormsControllerRemoveData, void>({
-      path: `/forms/${id}`,
+      path: `/forms/${slug}/${id}`,
       method: 'DELETE',
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags 2.2. Forms
+   * @name FormsControllerBatchRemove
+   * @summary 폼 일괄 삭제
+   * @request POST:/forms/{slug}/batch-delete
+   */
+  formsControllerBatchRemove = (
+    slug: string,
+    data: BatchDeleteFormDto,
+    params: RequestParams = {},
+  ) =>
+    this.request<FormsControllerBatchRemoveData, void>({
+      path: `/forms/${slug}/batch-delete`,
+      method: 'POST',
+      body: data,
+      type: ContentType.Json,
       ...params,
     });
 }

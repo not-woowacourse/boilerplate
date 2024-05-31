@@ -17,19 +17,6 @@ export interface CreateTodoDto {
   title: string;
 }
 
-export interface Client {
-  /**
-   * 클라이언트 ID
-   * @example 1
-   */
-  id: number;
-  /**
-   * 클라이언트 이름
-   * @example "Yongjun Park"
-   */
-  name: string;
-}
-
 export interface CreateTodoResponseDto {
   /**
    * 할 일 ID
@@ -63,11 +50,6 @@ export interface CreateTodoResponseDto {
    * @example "2021-07-01T00:00:00.000Z"
    */
   updatedAt: string;
-  /**
-   * 할 일을 등록한 클라이언트
-   * @example {"id":1,"name":"Yongjun Park"}
-   */
-  client: Client;
 }
 
 export interface ReadTodoResponseDto {
@@ -103,11 +85,6 @@ export interface ReadTodoResponseDto {
    * @example "2021-07-01T00:00:00.000Z"
    */
   updatedAt: string;
-  /**
-   * 할 일을 등록한 클라이언트
-   * @example {"id":1,"name":"Yongjun Park"}
-   */
-  client: Client;
 }
 
 export interface UpdateTodoDto {
@@ -161,11 +138,6 @@ export interface UpdateTodoResponseDto {
    * @example "2021-07-01T00:00:00.000Z"
    */
   updatedAt: string;
-  /**
-   * 할 일을 등록한 클라이언트
-   * @example {"id":1,"name":"Yongjun Park"}
-   */
-  client: Client;
 }
 
 export interface CreateClientDto {
@@ -214,6 +186,11 @@ export interface QuestionParam {
 
 export interface CreateSchemaDto {
   /**
+   * 스키마 슬러그
+   * @example "umore-2024"
+   */
+  slug: string;
+  /**
    * 질문 목록
    * @example [{"key":"age","type":"integer"},{"key":"gender"},{"key":"mbti"},{"key":"childhoodDream"},{"key":"mostImportantValue","isArray":true},{"key":"lifeSatisfaction","type":"integer"},{"key":"email","type":"email","isOptional":true}]
    */
@@ -226,42 +203,11 @@ export interface CreateSchemaResponseDto {
    * @example 1
    */
   id: number;
-  /** 스키마를 등록한 클라이언트 */
-  client: Client;
-}
-
-export interface CreateFormDto {
   /**
-   * 폼 데이터
-   * @example {"age":23,"gender":"male","mbti":"ISTJ","childhoodDream":"유튜버","mostImportantValue":["family","etc"],"lifeSatisfaction":6,"email":"yopark.dev@naver.com"}
+   * 스키마 슬러그
+   * @example "umore-2024"
    */
-  data: object;
-}
-
-export interface Schema {
-  /**
-   * 스키마 ID
-   * @example 1
-   */
-  id: number;
-  /** 스키마를 등록한 클라이언트 */
-  client: Client;
-}
-
-export interface CreateFormResponseDto {
-  /**
-   * 폼 ID
-   * @example 1
-   */
-  id: number;
-  /**
-   * 폼 생성 일시
-   * @format date-time
-   * @example "2021-07-01T00:00:00.000Z"
-   */
-  createdAt: string;
-  /** 해당 폼의 스키마 */
-  schema: Schema;
+  slug: string;
 }
 
 export interface Question {
@@ -290,11 +236,31 @@ export interface Question {
    * @example false
    */
   isOptional?: boolean;
-  /** 질문이 속한 스키마 */
-  schema: Schema;
 }
 
-export interface Form {
+export interface ReadSchemaResponseDto {
+  /**
+   * 스키마 ID
+   * @example 1
+   */
+  id: number;
+  /**
+   * 스키마 슬러그
+   * @example "umore-2024"
+   */
+  slug: string;
+  questions: Question[];
+}
+
+export interface CreateFormDto {
+  /**
+   * 폼 데이터
+   * @example {"age":23,"gender":"male","mbti":"ISTJ","childhoodDream":"유튜버","mostImportantValue":["family","etc"],"lifeSatisfaction":6,"email":"yopark.dev@naver.com"}
+   */
+  data: object;
+}
+
+export interface CreateFormResponseDto {
   /**
    * 폼 ID
    * @example 1
@@ -306,8 +272,6 @@ export interface Form {
    * @example "2021-07-01T00:00:00.000Z"
    */
   createdAt: string;
-  /** 해당 폼의 스키마 */
-  schema: Schema;
 }
 
 export interface AnswerWithQuestion {
@@ -342,10 +306,7 @@ export interface AnswerWithQuestion {
    * @example "2021-07-01"
    */
   dateValue?: string;
-  /** 어느 질문에 대한 답변인지 */
   question: Question;
-  /** 답변이 속한 폼 */
-  form: Form;
 }
 
 export interface ReadFormResponseDto {
@@ -360,9 +321,111 @@ export interface ReadFormResponseDto {
    * @example "2021-07-01T00:00:00.000Z"
    */
   createdAt: string;
-  /** 해당 폼의 스키마 */
-  schema: Schema;
   answers: AnswerWithQuestion[];
+}
+
+export interface BatchDeleteFormDto {
+  /**
+   * 삭제할 폼 ID 배열
+   * @example [1,2,3]
+   */
+  ids: number[];
+}
+
+export interface ReadMovieResponseDto {
+  /**
+   * 영화 ID
+   * @example 1
+   */
+  id: number;
+  /**
+   * 영화 제목
+   * @example "기생충"
+   */
+  title: string;
+  /**
+   * 대체 제목
+   * @example "PARASITE"
+   */
+  alternativeTitle?: string;
+  /**
+   * UCI 코드
+   * @example "G706+KOBIS04-MV.list.0020183782"
+   */
+  uci: string;
+  /**
+   * 상세 정보 URL
+   * @example "http://www.kobis.or.kr/kobis/business/mast/mvie/searchMovieList.do?sMovName=기생충&dtTp=movie&dtCd=20183782"
+   */
+  url: string;
+  /**
+   * 생성 년도
+   * @example 2019
+   */
+  year?: number;
+  /**
+   * 제작 지역
+   * @example "한국,미국"
+   */
+  region?: string;
+  /**
+   * 카테고리
+   * @example "드라마,코미디"
+   */
+  category?: string;
+  /**
+   * 권리 주체
+   * @example "봉준호"
+   */
+  rights?: string;
+}
+
+export interface SearchMovieResponseDto {
+  /**
+   * 영화 ID
+   * @example 1
+   */
+  id: number;
+  /**
+   * 영화 제목
+   * @example "기생충"
+   */
+  title: string;
+  /**
+   * 대체 제목
+   * @example "PARASITE"
+   */
+  alternativeTitle?: string;
+  /**
+   * UCI 코드
+   * @example "G706+KOBIS04-MV.list.0020183782"
+   */
+  uci: string;
+  /**
+   * 상세 정보 URL
+   * @example "http://www.kobis.or.kr/kobis/business/mast/mvie/searchMovieList.do?sMovName=기생충&dtTp=movie&dtCd=20183782"
+   */
+  url: string;
+  /**
+   * 생성 년도
+   * @example 2019
+   */
+  year?: number;
+  /**
+   * 제작 지역
+   * @example "한국,미국"
+   */
+  region?: string;
+  /**
+   * 카테고리
+   * @example "드라마,코미디"
+   */
+  category?: string;
+  /**
+   * 권리 주체
+   * @example "봉준호"
+   */
+  rights?: string;
 }
 
 export type AppControllerGetHelloData = any;
@@ -381,6 +444,8 @@ export type ClientsControllerCreateData = CreateClientResponseDto;
 
 export type SchemasControllerCreateData = CreateSchemaResponseDto;
 
+export type SchemasControllerFindOneData = ReadSchemaResponseDto;
+
 export type FormsControllerCreateData = CreateFormResponseDto;
 
 export type FormsControllerFindAllData = ReadFormResponseDto[];
@@ -388,3 +453,16 @@ export type FormsControllerFindAllData = ReadFormResponseDto[];
 export type FormsControllerFindOneByIdData = ReadFormResponseDto;
 
 export type FormsControllerRemoveData = any;
+
+export type FormsControllerBatchRemoveData = any;
+
+export interface MoviesControllerSearchParams {
+  /** 검색어 */
+  query: string;
+  /** 검색 개수 제한 (기본값 10개) */
+  limit?: number;
+}
+
+export type MoviesControllerSearchData = ReadMovieResponseDto[];
+
+export type MoviesControllerFindOneData = SearchMovieResponseDto;
